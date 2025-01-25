@@ -29,7 +29,7 @@ jobs:
         id: meta_app
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: cryseviel/github-actions-testing-node
+          images: cryseviel/github-actions-app
           
       - name: Bulid and push main app Docker image
         id: push_app
@@ -42,17 +42,17 @@ jobs:
           labels: ${{ steps.meta_app.outputs.labels }}
           
       - name : Generate artifact attestation for Main App
-        uses : actions/attest-build/provenance@v2
+        uses : actions/attest-build-provenance@v2
         with: 
-          subject_name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject_digest: ${{ steps.push_app.outputs.digest }}
+          subject-name: docker.io/cryseviel/github-actions-app
+          subject-digest: ${{ steps.push_app.outputs.digest }}
           push-to-registry: true
           
-      - name: Extract metadata (tags, labels) for main app Docker
+      - name: Extract metadata (tags, labels) for nginx Docker
         id: meta_nginx
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: cryseviel/github-actions-testing-node
+          images: cryseviel/github-actions-nginx
           
       - name: Bulid and push nginx app Docker image
         id: push_nginx
@@ -66,8 +66,8 @@ jobs:
           
           
       - name : Generate artifact attestation for Nginx App
-        uses : actions/attest-build/provenance@v2
+        uses : actions/attest-build-provenance@v2
         with: 
-          subject_name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject_digest: ${{ steps.push_nginx.outputs.digest }}
+          subject-name:  docker.io/cryseviel/github-actions-nginx
+          subject-digest: ${{ steps.push_nginx.outputs.digest }}
           push-to-registry: true
