@@ -8,7 +8,6 @@ app.get("/ping", (req: Request, res: Response) => {
   res.send({ message: "GET pong" })
 })
 
-
 app.post("/ping", (req: Request, res: Response) => {
   res.send({ message: "POST pong" })
 })
