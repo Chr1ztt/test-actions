@@ -44,8 +44,8 @@ jobs:
       - name : Generate artifact attestation for Main App
         uses : actions/attest-build-provenance@v2
         with: 
-          subject_name: docker.io/cryseviel/github-actions-app
-          subject_digest: ${{ steps.push_app.outputs.digest }}
+          subject-name: docker.io/cryseviel/github-actions-app
+          subject-digest: ${{ steps.push_app.outputs.digest }}
           push-to-registry: true
           
       - name: Extract metadata (tags, labels) for nginx Docker
@@ -68,6 +68,6 @@ jobs:
       - name : Generate artifact attestation for Nginx App
         uses : actions/attest-build-provenance@v2
         with: 
-          subject_name:  docker.io/cryseviel/github-actions-nginx
-          subject_digest: ${{ steps.push_nginx.outputs.digest }}
+          subject-name:  docker.io/cryseviel/github-actions-nginx
+          subject-digest: ${{ steps.push_nginx.outputs.digest }}
           push-to-registry: true
