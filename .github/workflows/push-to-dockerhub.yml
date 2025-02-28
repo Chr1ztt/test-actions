@@ -59,7 +59,7 @@ jobs:
         id: meta_nginx
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: ${{ env.REGISTRY }}/nginx
+          images: ${{ env.REGISTRY }}/chr1zt/nginx
           
       - name: Bulid and push nginx app Docker image
         id: push_nginx
@@ -75,6 +75,6 @@ jobs:
       - name : Generate artifact attestation for Nginx App
         uses : actions/attest-build-provenance@v2
         with: 
-          subject-name: ${{ env.REGISTRY }}/nginx
+          subject-name: ${{ env.REGISTRY }}/chr1zt/nginx
           subject-digest: ${{ steps.push_nginx.outputs.digest }}
           push-to-registry: true
