@@ -10,8 +10,6 @@ on:
   
 env: 
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  IMAGE_USERNAME: ${{ secrets.IMAGE_USERNAME }}
     
 jobs:
   push_to_registry:
@@ -26,18 +24,18 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Log in to Docker Hub
+      - name: Log in to github container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with: 
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.USER_PAT }}
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_PASSWORD }}
           
       - name: Extract metadata (tags, labels) for main app Docker
         id: meta_app
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.MAIN_IMAGE }}
           
       - name: Bulid and push main app Docker image
         id: push_app
@@ -52,7 +50,7 @@ jobs:
       - name : Generate artifact attestation for Main App
         uses : actions/attest-build-provenance@v2
         with: 
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-name: ${{ env.REGISTRY }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.MAIN_IMAGE }}
           subject-digest: ${{ steps.push_app.outputs.digest }}
           push-to-registry: true
           
@@ -60,7 +58,7 @@ jobs:
         id: meta_nginx
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_USERNAME }}/nginx
+          images: ${{ env.REGISTRY }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.NGINX_IMAGE }}
           
       - name: Bulid and push nginx app Docker image
         id: push_nginx
@@ -76,6 +74,6 @@ jobs:
       - name : Generate artifact attestation for Nginx App
         uses : actions/attest-build-provenance@v2
         with: 
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_USERNAME }}/nginx
+          subject-name: ${{ env.REGISTRY }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.NGINX_IMAGE }}
           subject-digest: ${{ steps.push_nginx.outputs.digest }}
           push-to-registry: true
