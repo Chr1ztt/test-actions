@@ -10,7 +10,7 @@ on:
   
 env: 
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+  IMAGE_NAME: ${{ github.repository }}
     
 jobs:
   push_to_registry:
@@ -36,7 +36,7 @@ jobs:
         id: meta_app
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: ${{ env.REGISTRY }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           
       - name: Bulid and push main app Docker image
         id: push_app
@@ -59,7 +59,7 @@ jobs:
         id: meta_nginx
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/nginx
           
       - name: Bulid and push nginx app Docker image
         id: push_nginx
@@ -75,6 +75,6 @@ jobs:
       - name : Generate artifact attestation for Nginx App
         uses : actions/attest-build-provenance@v2
         with: 
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-name: ${{ env.REGISTRY }}/nginx
           subject-digest: ${{ steps.push_nginx.outputs.digest }}
           push-to-registry: true
