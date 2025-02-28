@@ -11,6 +11,7 @@ on:
 env: 
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  IMAGE_USERNAME: ${{ secrets.IMAGE_USERNAME }}
     
 jobs:
   push_to_registry:
@@ -59,7 +60,7 @@ jobs:
         id: meta_nginx
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with: 
-          images: ${{ env.REGISTRY }}/chr1ztt/nginx
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_USERNAME }}/nginx
           
       - name: Bulid and push nginx app Docker image
         id: push_nginx
@@ -75,6 +76,6 @@ jobs:
       - name : Generate artifact attestation for Nginx App
         uses : actions/attest-build-provenance@v2
         with: 
-          subject-name: ${{ env.REGISTRY }}/chr1ztt/nginx
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_USERNAME }}/nginx
           subject-digest: ${{ steps.push_nginx.outputs.digest }}
           push-to-registry: true
